@@ -1,35 +1,34 @@
-# StudySpot — 중·고등학생 공부공간 찾기
+# StudySpot — API 없는 로컬 체험판
 
-React + Vite + Supabase Auth/Postgres + Kakao Local API + Vercel 서버리스 API.
+서울 25개 자치구의 가상 장소 데이터(JSON)를 검색하고, 브라우저 LocalStorage에 즐겨찾기 및 장소 수정 사항을 저장하는 React/Vite 앱입니다. Supabase/Kakao 계정과 API 키가 필요하지 않습니다.
 
-## 개발 서버
+## 실행
 
-1. `npm install`
-2. `cp .env.example .env` 후 값 설정
-3. Supabase SQL Editor에서 `supabase/schema.sql` 실행
-4. `npm run dev` (로컬 Vite 서버는 /api 서버리스 함수를 제공하지 않음. 전체 검색 테스트는 `vercel dev` 또는 배포 URL에서 진행)
-5. `npm run build` 검증
+```bash
+npm install
+npm run dev
+npm run build
+```
 
-## Vercel 배포
+## Vercel
 
-- GitHub 저장소 **Grace-AI**, Root Directory **studyspot** 지정
-- Framework: Vite, Build Command: `npm run build`, Output: `dist`
-- 환경변수: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `KAKAO_REST_API_KEY`
-- Supabase Auth의 Site URL / Redirect URL에 실제 Vercel 도메인 등록
-- 비밀 키는 Git에 업로드하지 마세요. 공개 가능한 Supabase anon/publishable key만 VITE_ 변수 사용
+1. GitHub `angelgold1004/Grace-AI` 저장소 Import
+2. Root Directory: `studyspot`
+3. Framework: Vite, Build Command: `npm run build`, Output Directory: `dist`
+4. 환경변수: **없음**
+5. Deploy 후 장소 검색/즐겨찾기/관리/JSON 백업·복원 확인
 
-## 사용자 보호 / MVP 제한
+## 데이터 저장
 
-- 카카오 장소 데이터는 실시간 검색 결과이며 학교명, GPS, 실명은 수집하지 않습니다.
-- 만 14세 이상 확인은 **자기 선언**일 뿐 실제 연령 검증이 아닙니다. 만 14세 미만 계정 생성 차단의 확실한 검증 수단은 아니므로 실제 미성년자 공개 서비스 전 법률·개인정보 검토와 서버측 가입 정책/검증을 반드시 추가하세요.
-- 회원가입 인증메일, RLS, 계정삭제 처리, 개인정보 처리방침·동의 증빙, 접근성, abuse/rate limiting, 관리자 신고 검수는 운영 전 점검이 필요합니다.
-- 출시 전까지 시범용으로만 사용하세요. 원칙적으로 계정 탈퇴 요청은 운영자 수작업으로 처리해야 합니다.
-- 장소 정보 정확성, 운영 시간, 청소년 출입 가능 여부를 확인하도록 안내합니다.
+- `src/data/places.json`: 25개 자치구별 **가상** 장소 1개씩. 실제 장소·주소가 아닙니다.
+- `localStorage['studyspot.local.v1']`: 각 브라우저의 장소 목록 및 즐겨찾기.
+- 장소 등록/수정/삭제는 다른 사용자에게 반영되지 않습니다. 인증된 관리자 기능이 아닙니다.
+- JSON 내보내기/가져오기로 수동 백업·복원이 가능합니다. 백업 파일에는 사용자가 직접 등록한 데이터가 들어 있으므로 안전하게 관리하세요.
+- 브라우저 저장소 초기화·시크릿 모드·다른 기기에서는 데이터가 유지되지 않을 수 있습니다.
 
-## 저장 구조
+## 주의
 
-- Auth: 이메일 / 비밀번호 (비밀번호 DB 직접 저장 금지)
-- profiles: 닉네임
-- favorites: 계정별 저장 장소
-- place_reports: 오류 신고
-- 각 테이블은 사용자 자신의 행에만 접근 가능한 RLS 적용
+- 실제 장소 검색, 회원가입, 사용자 간 데이터 동기화는 지원하지 않습니다.
+- 가상 데이터는 반드시 체험 목적으로만 사용하세요.
+- 기존 `api/places.js`, `supabase/schema.sql`은 과거 API 연동 버전 참고 파일로 남겨둡니다. 현재 앱에서는 사용하지 않습니다.
+- 미성년자 개인정보는 수집하지 않습니다. 사용자가 장소 설명에 개인 정보를 넣지 않도록 주의하세요.
